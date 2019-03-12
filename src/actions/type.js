@@ -1,0 +1,10 @@
+export const TEST_DISPATH = "TEST_DISPATH";
+export const ARTICLE_LOADING = "ARTICLE_LOADING";
+export const GET_ARTICLES = "GET_ARTICLES";
+export const GET_ARTICLE = "GET_ARTICLE";
+export const GET_TAGNAME = "GET_TAGNAME";
+export const GET_COMMENTS = "GET_COMMENTS";
+export const CLICK_COMMENT = "CLICK_COMMENT";
+export const POST_COMMENT = "POST_COMMENT";
+export const SET_CURRENT_USER = "SET_CURRENT_USER";
+export const ADD_COMMENT = "ADD_COMMENT";

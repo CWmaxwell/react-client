@@ -1,4 +1,4 @@
-import { GET_COMMENTS, CLICK_COMMENT, SET_CURRENT_USER, ADD_COMMENT } from './type';
+import { GET_COMMENTS, CLICK_COMMENT, SET_CURRENT_USER, ADD_COMMENT, SET_COMMMENT_UPDATE } from './type';
 import axios from 'axios';
 
 // 获取评论列表
@@ -65,4 +65,12 @@ export const setCurrentUser = userData => {
         type: SET_CURRENT_USER,
         payload: userData
     }
+}
+
+export const setCommentUpdate = () => dispatch => {
+    // console.log('调用了setCommentUpdate');
+    dispatch({
+        type: SET_COMMMENT_UPDATE,
+        payload: null
+    });
 }

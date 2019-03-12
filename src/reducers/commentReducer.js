@@ -1,9 +1,10 @@
-import { GET_COMMENTS, CLICK_COMMENT, ADD_COMMENT } from '../actions/type';
+import { GET_COMMENTS, CLICK_COMMENT, ADD_COMMENT, SET_COMMMENT_UPDATE } from '../actions/type';
 
 const initialState = {
     comments: [],
     comment: null,
     referenceComment: null,
+    postupdate: false,
     loading: false
 }
 
@@ -22,7 +23,13 @@ export default function (state = initialState, action) {
         case ADD_COMMENT:
             return {
                 ...state,
-                comments: [...state.comments, action.payload]
+                comments: [...state.comments, action.payload],
+                postupdate: true
+            }
+        case SET_COMMMENT_UPDATE:
+            return {
+                ...state,
+                postupdate: false
             }
         default:
             return state;

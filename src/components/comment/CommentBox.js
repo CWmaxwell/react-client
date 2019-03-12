@@ -7,7 +7,8 @@ import CommentList from "./CommentList";
 import {
   getComments,
   clickComment,
-  postComment
+  postComment,
+  setCommentUpdate
 } from "../../actions/commentAction";
 class CommentBox extends Component {
   componentDidMount() {
@@ -20,7 +21,7 @@ class CommentBox extends Component {
   };
 
   render() {
-    const { comments, referenceComment } = this.props.comment;
+    const { comments, referenceComment, postupdate } = this.props.comment;
     return (
       <div>
         <Divider orientation="left">{comments.length} 条评论</Divider>
@@ -30,7 +31,13 @@ class CommentBox extends Component {
           onClickComment={this.props.clickComment}
           onPostComment={this.props.postComment}
         />
-        <CommentList data={comments} onClickComment={this.props.clickComment} />
+        {/* {comments.length > 0 ? <CommentList data={comments} onClickComment={this.props.clickComment} /> : null} */}
+        <CommentList
+          data={comments}
+          onClickComment={this.props.clickComment}
+          postupdate={postupdate}
+          setCommentUpdate={this.props.setCommentUpdate}
+        />
       </div>
     );
   }
@@ -40,7 +47,8 @@ CommentBox.propTypes = {
   comment: PropTypes.object.isRequired,
   getComments: PropTypes.func.isRequired,
   clickComment: PropTypes.func.isRequired,
-  postComment: PropTypes.func.isRequired
+  postComment: PropTypes.func.isRequired,
+  setCommentUpdate: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -49,5 +57,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getComments, clickComment, postComment }
+  { getComments, clickComment, postComment, setCommentUpdate }
 )(CommentBox);

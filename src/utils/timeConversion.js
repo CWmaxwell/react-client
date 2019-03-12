@@ -4,7 +4,7 @@ const hour = minute * 60;
 const day = hour * 24;
 
 function zeroize( num ) {
-    return (String(num).length == 1 ? '0' : '') + num;
+    return (String(num).length === 1 ? '0' : '') + num;
 }
 
 export default function(timeString) {

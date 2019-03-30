@@ -3,6 +3,10 @@ import { Input, Layout, Menu, Drawer } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 const { Header } = Layout;
 class Navbar extends Component {
+    onSearch = (value) => {
+      this.props.history.push(`/search/${value}`)
+    }
+
     render() {
         return (
             <Header style={{ padding: '0', display: 'flex', justifyContent: 'space-between', background: '#fff', alignItems: 'center', borderBottom: '1px solid #e8e8e8'}}>
@@ -12,7 +16,7 @@ class Navbar extends Component {
                     mode="horizontal"
                     defaultSelectedKeys={['0']}
                     selectedKeys={[this.props.history.location.pathname]}
-                    style={{ lineHeight: '64px', flexBasis: 272 }}
+                    style={{ lineHeight: '64px', flexBasis: 276 }}
                 >
                     <Menu.Item key="/"><Link to="/">首页</Link></Menu.Item>
                     <Menu.Item key="/code"><Link to="/code">码农</Link></Menu.Item>
@@ -26,9 +30,9 @@ class Navbar extends Component {
                 </div>
                 <Input.Search 
                     placeholder="input search text"
-                    onSearch={value =>  { console.log(this.props.history)}}
+                    onSearch={this.onSearch}
                     enterButton 
-                    style={{ width: '200px', height: "40px", flexBasis: 272}}
+                    style={{ width: '200px', height: "40px", flexBasis: 256, marginRight: 20}}
                 />
             {/* </div>  */}
             </Header>

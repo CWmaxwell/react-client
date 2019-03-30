@@ -8,8 +8,14 @@ import Article from './components/article/Article';
 import { Layout, BackTop } from 'antd';
 import store from './store';
 import { Provider } from 'react-redux';
+import { setCurrentUser } from './actions/commentAction'
 import './App.css';
 
+const user = localStorage.getItem('user');
+if (user !== 'undefined' && user !== null) {
+  const storeUser = JSON.parse(user);
+  store.dispatch(setCurrentUser(storeUser));
+}
 
 const { Content} = Layout;
 
@@ -30,6 +36,7 @@ class App extends Component {
                   {/* <Route exact path="/article" component={Article} /> */}
                   <Route path="/(|code|game|other)/" component={LoadMoreList} />
                   <Route path="/tag/:id" component={LoadMoreList} />
+                  <Route path="/search/:id" component={LoadMoreList} />
                   <Route path="/article/:id" component={Article} />
                 </Switch>
                 {/* <LoadMoreList /> */}

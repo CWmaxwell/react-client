@@ -22,9 +22,9 @@ export default function(timeString) {
     let result = Y + '.' + zeroize(M) + '.' + zeroize(D) + " " + HoursTime;
     if (dayC >= 1 && dayC < 7) {
         result = Math.floor(dayC) + '天以前';
-    } else if (hourC >= 1) {
+    } else if (hourC >= 1 && hourC < 24) {
         result = Math.floor(hourC) + '小时以前';
-    } else if (minC >= 1) {
+    } else if (minC >= 1 && minC < 60) {
         result = Math.floor(minC) + '分钟以前';
     } else if (minC < 1) {
         result = '刚刚';

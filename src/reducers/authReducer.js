@@ -2,7 +2,7 @@ import { TEST_DISPATH, SET_CURRENT_USER } from '../actions/type';
 
 const initialState = {
   // isAuthenticated: false,
-  user: {}
+  user: null
 }
 
 export default function (state = initialState, action) {

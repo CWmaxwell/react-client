@@ -19,10 +19,14 @@ class LoadMoreList extends Component {
 
   componentDidMount() {
     const pathname = this.props.location.pathname;
+    // console.log(pathname);
     this.props.getArticles(pathname);
     if (pathname && pathname.indexOf('/tag/') !== -1) {
-      const id = this.props.match.params.id;
-      this.props.getTagName(id);
+      let id = this.props.match.params.id;
+      this.props.getTagName(id, true);
+    } else if (pathname && pathname.indexOf('/search/') !== -1) {
+      let id = this.props.match.params.id;
+      this.props.getTagName(id, false);
     } else {
       this.props.getTagName();
     }
@@ -53,18 +57,19 @@ class LoadMoreList extends Component {
 
   render() {
     const { articles, loading, tagName } = this.props.article;
+    const titleClass = this.props.location.pathname.split('/')[1];
     let listContent;
     if (articles === null || loading) {
       listContent = <div style={{ height: '70vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Spin size="large"/></div>;
     } else {
       listContent = 
         <div style={{width: '100%'}}>
-          {tagName ? <Divider orientation="left"><Icon type="tag" />{tagName}</Divider> : null}
-          <ArticleList articles={articles} handleClickTitle={this.clickTitle.bind(this)}/>;
+          {tagName ? <Divider orientation="left"><Icon type="tag" style={{marginRight: '0.5rem'}}/>   {tagName}</Divider> : null}
+          <ArticleList articles={articles} handleClickTitle={this.clickTitle.bind(this)}/>
         </div>
     }
     return (
-      <DocumentTitle title={tagName ? tagName + ' | tag | 银弹' : this.getPageTitle()}>
+      <DocumentTitle title={tagName ? `${tagName} | ${titleClass} | 银弹` : this.getPageTitle()}>
         {listContent}
       </DocumentTitle>
     );

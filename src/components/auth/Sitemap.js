@@ -1,61 +1,192 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { Divider, Tag } from 'antd';
-import { black } from 'ansi-colors';
-import DocumentTitle from 'react-document-title';
-const monthsInEng = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-class Sitemap extends Component {
-    render() {
-        let arr = ['Tag1123123', 'Tag223', 'Tag3', 'Tag4','Ta', 'Tag2123', 'Tag3', 'Tag4'];
-        let timeArc = [{time: new Date(2018,10,13).getTime(), title: '文章测试1', key: '1'}, {time: new Date(2018,12,13).getTime(), title: '文章测试2', key: '2'}, {time: new Date(2019,1,13).getTime(), title: '文章测试3', key: '3'}]
-        let year = null;
-        let month = null;
-        return (
-            <DocumentTitle title='sitemap | 银弹' >
-            <div className="sitemap">
-                <Divider orientation="left">标签</Divider>
-                <div style={{width: '350px', position: 'relative', left: '80px'}}>
-                    { arr.map((value, index) => 
-                        <Tag key={index} style={{ marginTop: '10px' }}><Link to={`/tag/${value}`}>{value}</Link></Tag>
-                    )}
-                </div>
-                <Divider orientation="left">文章</Divider>
-                <div style={{width: '500px', position: 'relative', left: '40px'}}>
-                    {   timeArc.reverse().map((value, index) => {
-                            let tempDate = new Date(value.time);
-                            let articleLi = <div style={{ position: 'relative', left: '80px' }}><p style={{ display: 'inline-block', width: '80px',textAlign: 'left'}}>{tempDate.toLocaleDateString()}</p><Link style={{color: 'black', textDecoration: 'underline'}} to={`/article/${value.key}`}>{value.title}</Link></div>
-                            if (tempDate.getFullYear() !== year) {
-                                year = tempDate.getFullYear();
-                                month = tempDate.getMonth();
-                                return (
-                                    <div key={index} >
-                                        <div style={{ fontSize: '25px', fontWeight: '800'}}>{tempDate.getFullYear() + '年'}</div>
-                                        <div style={{ fontSize: '20px', fontWeight: '600', position: 'relative', left: '40px' }}>{monthsInEng[month]}</div>
-                                        {articleLi}
-                                    </div>
-                                )
-                            } else {
-                                if (tempDate.getMonth() !== month) {
-                                    month = tempDate.getMonth();
-                                    return (
-                                        <div key={index}>
-                                            <div style={{ fontSize: '20px', fontWeight: '600', position: 'relative', left: '40px' }}>{monthsInEng[month]}</div>
-                                            {articleLi}
-                                        </div>
-                                    )
-                                } else {
-                                    return (
-                                        {articleLi}
-                                    )
-                                }
-                            }
-                        }
-                    )}
-                </div>
-            </div>
-            </DocumentTitle>
-        );
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import { Divider, Tag } from "antd";
+import DocumentTitle from "react-document-title";
+import { PropTypes } from "prop-types";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { getTags, getArticles } from "../../actions/articleAction";
+const monthsInEng = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+];
+
+const arrayInYear = array => {
+  const result = [];
+  let year = "";
+  let month = "";
+  for (let i = 0; i < array.length; i++) {
+    let date = new Date(array[i].create_time);
+    let dataYear = date.getFullYear();
+    let dataMonth = date.getMonth();
+    if (year !== dataYear) {
+      year = dataYear;
+      month = dataMonth;
+      let yearTemp = { year: year, data: [{ month: month, articles: [] }] };
+      yearTemp.data[0].articles.push(array[i]);
+      result.push(yearTemp);
+    } else if (month !== dataMonth) {
+      month = dataMonth;
+      let monthTemp = { month: month, articles: [array[i]] };
+      result[result.length - 1].data.push(monthTemp);
+    } else {
+      let dataLength = result[result.length - 1].data.length;
+      result[result.length - 1].data[dataLength - 1].articles.push(array[i]);
     }
+  }
+  return result;
+};
+class Sitemap extends Component {
+  componentDidMount() {
+    this.props.getTags();
+    this.props.getArticles("");
+  }
+  //   style={{ width: "500px", position: "relative", left: "40px" }}
+  render() {
+    const { tags, articles } = this.props.article;
+    const articleArray = arrayInYear(articles);
+    return (
+      <DocumentTitle title="sitemap | 银弹">
+        <div className="sitemap">
+          <Divider orientation="left">标签</Divider>
+          <div style={{ width: "350px", position: "relative", left: "80px" }}>
+            {tags.map((value, index) => (
+              //   <Tag key={index} style={{ marginTop: "10px" }}>
+              <span
+                style={{
+                  margin: "0.3rem",
+                  textAlign: "-webkit-match-parent",
+                  fontSize: "1rem"
+                }}
+                key={value._id}
+              >
+                <Link style={{ padding: ".4rem" }} to={`/tag/${value._id}`}>
+                  {value.name} <span> ({value.articleCount})</span>
+                </Link>
+              </span>
+              //   {/* </Tag> */}
+            ))}
+          </div>
+          <Divider orientation="left">文章</Divider>
+          <div className="sitemap-article-list">
+            {articleArray.map((year, index) => (
+              <div className="year-list" key={index}>
+                <p className="year-name">{year.year}</p>
+                {year.data.map((month, index) => (
+                  <ul className="month-list" key={index}>
+                    <p className="month-name">{monthsInEng[month.month]}</p>
+                    {month.articles.map((article, index) => (
+                      <li className="sitemap-list" key={index}>
+                        <article>
+                          <time>{article.create_time.slice(5, 10)}</time>
+                          <Link
+                            // style={{ color: "black", textDecoration: "underline" }}
+                            to={`/article/${article.id}`}
+                          >
+                            {article.title}
+                          </Link>
+                        </article>
+                      </li>
+                    ))}
+                  </ul>
+                ))}
+              </div>
+            ))}
+            {/* {articles.length !== 0
+              ? articles.map((value, index) => {
+                  let tempDate = new Date(value.create_time);
+                  let articleLi = (
+                    <div style={{ position: "relative", left: "80px" }}>
+                      <p
+                        style={{
+                          display: "inline-block",
+                          width: "80px",
+                          textAlign: "left"
+                        }}
+                      >
+                        {tempDate.toLocaleDateString()}
+                      </p>
+                      <Link
+                        style={{ color: "black", textDecoration: "underline" }}
+                        to={`/article/${value._id}`}
+                      >
+                        {value.title}
+                      </Link>
+                    </div>
+                  );
+                  if (tempDate.getFullYear() !== year) {
+                    year = tempDate.getFullYear();
+                    month = tempDate.getMonth();
+                    return (
+                      <div key={index}>
+                        <div style={{ fontSize: "25px", fontWeight: "800" }}>
+                          {tempDate.getFullYear() + "年"}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: "20px",
+                            fontWeight: "600",
+                            position: "relative",
+                            left: "40px"
+                          }}
+                        >
+                          {monthsInEng[month]}
+                        </div>
+                        {articleLi}
+                      </div>
+                    );
+                  } else {
+                    if (tempDate.getMonth() !== month) {
+                      month = tempDate.getMonth();
+                      return (
+                        <div key={index}>
+                          <div
+                            style={{
+                              fontSize: "20px",
+                              fontWeight: "600",
+                              position: "relative",
+                              left: "40px"
+                            }}
+                          >
+                            {monthsInEng[month]}
+                          </div>
+                          {articleLi}
+                        </div>
+                      );
+                    } else {
+                      return  articleLi ;
+                    }
+                  }
+                })
+              : null} */}
+          </div>
+        </div>
+      </DocumentTitle>
+    );
+  }
 }
 
-export default Sitemap;
+Sitemap.propTypes = {
+  article: PropTypes.object.isRequired,
+  getTags: PropTypes.func.isRequired,
+  getArticles: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => ({
+  article: state.article
+});
+
+export default connect(
+  mapStateToProps,
+  { getTags, getArticles }
+)(withRouter(Sitemap));

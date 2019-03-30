@@ -27,8 +27,12 @@ class Aside extends Component {
 
   render() {
     // #eb2f96
+    const { comments, likes, hasLiked, onClickLike, onClickComment } = this.props;
     const { likeOver, commentOver } = this.state;
-    const likeColor = likeOver ? '#eb2f96' : 'grey';
+    let likeColor = likeOver ? '#eb2f96' : 'grey';
+    if (hasLiked) {
+      likeColor = '#eb2f96';
+    }
     const commentColor = commentOver ? 'green' : 'grey';
     return (
       <aside>
@@ -36,17 +40,19 @@ class Aside extends Component {
             className="aside-like" style={{marginBottom: 2}} 
             onMouseOver={this.handleLikeMouseOver}
             onMouseOut={this.handleLikeMouseOut}
+            onClick={onClickLike}
           >
             <Icon type="heart" theme="twoTone" twoToneColor={likeColor}/>
-            <span>19</span>
+            <span>{likes}</span>
           </div>
           <div 
             className="aside-comment"
             onMouseOver={this.handleCommentMouseOver}
             onMouseOut={this.handleCommentMouseOut}
+            onClick={onClickComment}
           >
             <Icon type="message" theme="twoTone" twoToneColor={commentColor}/>
-            <span>12</span>
+            <span>{comments}</span>
           </div>
       </aside>
     )

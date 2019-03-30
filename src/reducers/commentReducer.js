@@ -1,4 +1,4 @@
-import { GET_COMMENTS, CLICK_COMMENT, ADD_COMMENT, SET_COMMMENT_UPDATE } from '../actions/type';
+import { GET_COMMENTS, CLICK_COMMENT, ADD_COMMENT, SET_COMMMENT_UPDATE, UPDATE_COMMENTS } from '../actions/type';
 
 const initialState = {
     comments: [],
@@ -30,6 +30,19 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 postupdate: false
+            }
+        case UPDATE_COMMENTS:
+            const { comments } = state;
+            const length = comments.length;
+            for (let i = 0; i < length; i++) {
+                let tempComment = comments[i];
+                if (tempComment._id === action.payload._id) {
+                    comments.splice(i, 1, action.payload);
+                }
+            }
+            return {
+                ...state,
+                comments: comments,
             }
         default:
             return state;

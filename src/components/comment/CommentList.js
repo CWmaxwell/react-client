@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { List } from "antd";
+import { List, Icon } from "antd";
 import CommentItem from "./CommentItem";
-import { getComments } from "../../actions/commentAction";
+
 class CommentList extends Component {
   scrollToBottom = () => {
     this.list.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -15,6 +15,11 @@ class CommentList extends Component {
   }
 
   render() {
+    const { userData } = this.props;
+    let email = "";
+    if (userData) {
+      email = userData.email;
+    }
     return (
       <div
         className="list-box"
@@ -25,10 +30,13 @@ class CommentList extends Component {
         <List
           itemLayout="vertical"
           dataSource={this.props.data}
+          locale={{ emptyText: <Icon type="copy"/> }}
           renderItem={item => (
             <CommentItem
               onClickComment={this.props.onClickComment}
+              onClickLike={this.props.onClickLike}
               data={item}
+              email={email}
             />
           )}
         />

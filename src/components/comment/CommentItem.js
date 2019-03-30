@@ -1,6 +1,6 @@
 import '../article/marked.css';
 import React, { Component } from 'react'
-import { Icon } from 'antd';
+import { Icon, Tag } from 'antd';
 import hljs from 'highlight.js';
 import marked from 'marked';
 import timeConversion from '../../utils/timeConversion'
@@ -13,7 +13,7 @@ class CommentItem extends Component {
   }
 
   componentWillMount() {
-    //marked相关配置
+    // marked相关配置
     marked.setOptions({
       renderer: new marked.Renderer(),
       gfm: true,
@@ -43,21 +43,44 @@ class CommentItem extends Component {
     this.props.onClickComment(reference);
   }
 
-  render() {
+  handleClickLike = () => {
     const { data } = this.props;
+    const user = localStorage.getItem('user');
+    if (user && user !== "undefined" && user !== null) {
+      const storeUser = JSON.parse(user);
+      const email = storeUser.email;
+      if (data.likes.indexOf(email) !== -1) {
+        return;
+      }
+      const params = { id: data._id, email };
+      this.props.onClickLike(params);
+    } else {
+      alert("请先评论");
+      return;
+    }
+  }
+
+  render() {
+    const { data, email } = this.props;
     const visibility = this.state.replyVisible ? 'visible': 'hidden';
+    let hasLiked = false;
+    if (email !== '' && data.likes.indexOf(email) !== -1) {
+      hasLiked = true;
+    }
     return (
       <div className="comment-item" onMouseOut={this.handleMouseOut} onMouseOver={this.handleMouseOver}>
         <div className="cm-avatar">
           <a target="_blank" rel="external nofollow">
             <img alt={data.user.name} src={data.user.avatar} />
           </a>
+          {data.user.is_admin ? <Tag color="#108ee9" style={{ marginTop: '0.4rem' }}>博主</Tag> : null}
         </div>
         <div className="cm-body">
           <div className="cm-header">
             <a target="_blank" rel="external nofollow" className="user-name">
               <span>{data.user.name}</span>
             </a>
+            { data.is_top ? <Tag color="magenta">已置顶</Tag> : null }
             <span className="cm-time">{timeConversion(data.create_time)}</span>
           </div>
           <div className="cm-content">
@@ -81,11 +104,11 @@ class CommentItem extends Component {
             />
           </div>
           <div className="cm-footer">
-            <a href className="like" onClick={()=>console.log('点击了点赞')}>
+            <a  className="like" onClick={this.handleClickLike} style={{ color: hasLiked ? '#ca5c54' : null }}>
               <Icon type="like"/>
               <span style={{marginLeft: '.2em'}}>顶&nbsp;({data.likes.length})</span>
             </a>
-            <a href className="reply" onClick={this.handleClickReply}>           
+            <a  className="reply" onClick={this.handleClickReply}>           
               <Icon type="arrow-left" style={{visibility: visibility}}/>
               <span style={{marginLeft: '.2em', visibility: visibility}}>回复</span>
             </a>

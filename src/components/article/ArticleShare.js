@@ -6,7 +6,7 @@ class ArticleShare extends Component {
   render() {
     const { tags, likes } = this.props;
     let tagContent = <span style={{marginLeft: '2rem'}}>该文章没有标签</span>
-    if (tags) {
+    if (tags && tags.length !== 0) {
         tagContent = tags.map((tag, index) => (
             <span key={tag.create_time} style={{marginLeft: '2.5rem', fontSize: 18, textDecoration: 'underline'}}><Icon type="tag"/> <Link to={`/tag/${tag._id}`} style={{color: '#b3b3b3'}}>{tag.name}</Link></span>
         ))

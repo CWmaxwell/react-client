@@ -48,7 +48,10 @@ class Article extends Component {
   }
 
   handleArticleLike = () => {
-    const { email } = this.props.auth.user;
+    let email;
+    if (this.props.auth.user) {
+      email = this.props.auth.user.email;
+    }
     const { article } = this.props.article;
     if (!email) {
       alert("请先评论");
@@ -68,9 +71,12 @@ class Article extends Component {
 
   render() {
     const { article, loading } = this.props.article;
-    const { email } = this.props.auth.user;
+    let email;
+    if (this.props.auth.user) {
+      email = this.props.auth.user.email;
+    }
     let hasLiked = false;
-    if (article) {
+    if (article && email) {
       hasLiked = article.likes.indexOf(email) === -1 ? false : true;
     }
     let articleContent;

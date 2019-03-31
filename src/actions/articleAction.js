@@ -21,7 +21,7 @@ export const updateArticlelikes = (id, email) => dispatch => {
 // 获取文章列表
 export const getArticles = (category) => dispatch => {
     dispatch(setArticleLoading())
-    axios.get(`/api/article/${category}`)
+    axios.get(`/api/article${category}`)
         .then(res => 
             dispatch({
                 type: GET_ARTICLES,

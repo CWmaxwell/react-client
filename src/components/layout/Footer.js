@@ -9,7 +9,7 @@ export default function MyFooter() {
             <Link to="/about">我</Link><Divider type="vertical" /><Link to="/sitemap">归档</Link>
         </div>
         <div>
-            个人博客 @2019 Created by chenw247
+            前端修炼 @2019 Created by chenw247
         </div>      
     </Footer>
   )
